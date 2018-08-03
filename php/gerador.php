@@ -1,11 +1,13 @@
 <?php
-setlocale( LC_ALL, 'pt_BR', 'pt_BR.iso-8859-1', 'pt_BR.utf-8', 'portuguese' );
-date_default_timezone_set( 'America/Sao_Paulo' );
+
 require('../php/fpdf/alphapdf.php');
 require('../php/PHPMailer/class.phpmailer.php');
 require '../php/conexao.inc';
 
-$consulta1="select *from lista where id=3";
+$pessoa    = substr($_POST['pessoa'], 0, 1);
+
+
+$consulta1="select *from lista where id='$pessoa'";
 $conn1=mysqli_query($link,$consulta1);
 
 while ($dado1=$conn1->fetch_array()){
@@ -14,6 +16,9 @@ while ($dado1=$conn1->fetch_array()){
 }
 
 $opcao    = substr($_POST['tipo'], 0, 1);
+
+
+
 
 $consulta="select *from evento where id='$opcao'";
 $conn=mysqli_query($link,$consulta);
@@ -54,30 +59,26 @@ $pdf->SetFont('Arial', '', 15);
 
 $pdf->SetXY(109,46);
 
-$pdf->MultiCell(265, 10, $texto1, '', 'L', 0); // Tamanho width e height e posição
-//
-// // Mostrar o nome
+$pdf->MultiCell(265, 10, $texto1, '', 'L', 0);
 
-$pdf->SetFont('Arial', '', 30); // Tipo de fonte e tamanho
+$pdf->SetFont('Arial', '', 30);
 
-$pdf->SetXY(20,86); //Parte chata onde tem que ficar ajustando a posição X e Y
+$pdf->SetXY(20,86);
 
-$pdf->MultiCell(265, 10, $nome, '', 'C', 0); // Tamanho width e height e posição
-//
-// // Mostrar o corpo
+$pdf->MultiCell(265, 10, $nome, '', 'C', 0);
 
-$pdf->SetFont('Arial', '', 15); // Tipo de fonte e tamanho
 
-$pdf->SetXY(20,110); //Parte chata onde tem que ficar ajustando a posição X e Y
+$pdf->SetFont('Arial', '', 15);
+$pdf->SetXY(20,110);
 
-$pdf->MultiCell(265, 10, $texto2, '', 'C', 0); // Tamanho width e height e posição
+$pdf->MultiCell(265, 10, $texto2, '', 'C', 0);
 //
 // // Mostrar a data no final
 
 $pdf->SetFont('Arial', '', 15);
 
-$pdf->SetXY(32,172); //Parte chata onde tem que ficar ajustando a posição X e Y
-$pdf->MultiCell(165, 10, $texto3, '', 'L', 0); 
+$pdf->SetXY(32,172);
+$pdf->MultiCell(165, 10, $texto3, '', 'L', 0);
 //
 
 $pdfdoc = $pdf->Output('', 'S');
@@ -90,9 +91,9 @@ $messageBody = "Olá $nome<br><br>É com grande prazer que entregamos o seu cert
 
 $mail = new PHPMailer();
 
-$mail->SetFrom("matheus_carvalho192@outlook.com", "Certificado Pronto");
+$mail->SetFrom("vitojgp@gmail.com", "Certificado Pronto");
 
-$mail->Subject    = $subject;
+$mail->Subject = $subject;
 
 $mail->MsgHTML(utf8_decode($messageBody));
 
@@ -101,11 +102,15 @@ $mail->AddAddress($email);
 $mail->addStringAttachment($pdfdoc, 'certificado.pdf');
 
 $mail->Send();
-//
+
 $certificado="../certificados/$nome-$modelo.pdf";
-$pdf->Output($certificado,'F'); //Salva o certificado no servidor (verifique se a pasta "arquivos" tem a permissão necessária)
+
+
+
+$pdf->Output($certificado,'F');
 
 $pdf->Output();
+
 mysqli_close($link);
 
 ?>

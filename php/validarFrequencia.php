@@ -15,8 +15,8 @@
     }
 
   }
-
-    header("Location: ../templates/lista.php");
+  $valor=$_POST["valor"];
+  header("Location: ../templates/lista.php");
 
 
   mysqli_close($link);

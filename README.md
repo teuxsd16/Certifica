@@ -1,3 +1,0 @@
-# Certifica
-
-Gerador de Certificados
